@@ -19,51 +19,51 @@ def init_rss_sources():
     sources = [
         {
             "name": "メルカリ",
-            "url": "https://engineering.mercari.com/blog/feed.xml"
+            "url": "https://engineering.mercari.com/blog"
         },
         {
             "name": "サイバーエージェント",
-            "url": "https://developers.cyberagent.co.jp/blog/feed/"
+            "url": "https://developers.cyberagent.co.jp/blog/"
         },
         {
             "name": "LINE",
-            "url": "https://engineering.linecorp.com/ja/blog/rss"
+            "url": "https://engineering.linecorp.com/ja/blog/"
         },
         {
             "name": "楽天",
-            "url": "https://tech.rakuten.co.jp/feed/"
+            "url": "https://tech.rakuten.co.jp/"
         },
         {
             "name": "DeNA",
-            "url": "https://engineering.dena.com/blog/feed/"
+            "url": "https://engineering.dena.com/blog/"
         },
         {
             "name": "クックパッド",
-            "url": "https://techlife.cookpad.com/feed"
+            "url": "https://techlife.cookpad.com"
         },
         {
             "name": "ヤフー",
-            "url": "https://techblog.yahoo.co.jp/feed/"
+            "url": "https://techblog.yahoo.co.jp/"
         },
         {
             "name": "リクルート",
-            "url": "https://engineer.recruit-lifestyle.co.jp/techblog/feed/"
+            "url": "https://engineer.recruit-lifestyle.co.jp/techblog/"
         },
         {
             "name": "はてな",
-            "url": "https://developer.hatenastaff.com/rss"
+            "url": "https://developer.hatenastaff.com"
         },
         {
             "name": "ミクシィ",
-            "url": "https://mixi-developers.mixi.co.jp/feed"
+            "url": "https://mixi-developers.mixi.co.jp"
         },
         {
             "name": "GMOペパボ",
-            "url": "https://tech.pepabo.com/feed.xml"
+            "url": "https://tech.pepabo.com"
         },
         {
             "name": "ZOZO",
-            "url": "https://techblog.zozo.com/rss.xml"
+            "url": "https://techblog.zozo.com"
         },
     ]
 
