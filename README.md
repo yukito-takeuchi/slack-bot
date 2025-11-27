@@ -29,12 +29,14 @@ slack-bot/
 │   │   ├── scheduler/    # スケジューラー
 │   │   ├── services/     # ビジネスロジック
 │   │   └── main.py       # アプリケーションエントリーポイント
+│   ├── scripts/          # ユーティリティスクリプト
 │   ├── tests/            # テストコード
 │   ├── migrations/       # データベースマイグレーション
+│   ├── .env              # 環境変数（backend配下）
+│   ├── .env.example      # 環境変数テンプレート
 │   ├── Dockerfile
 │   └── requirements.txt
 ├── docker-compose.yml
-├── .env.example
 └── README.md
 ```
 
@@ -49,13 +51,13 @@ cd slack-bot
 
 ### 2. 環境変数の設定
 
-`.env.example` をコピーして `.env` を作成し、必要な値を設定します。
+`backend/.env.example` をコピーして `backend/.env` を作成し、必要な値を設定します。
 
 ```bash
-cp .env.example .env
+cp backend/.env.example backend/.env
 ```
 
-`.env` ファイルを編集：
+`backend/.env` ファイルを編集：
 
 ```env
 # Slack Webhook URL（必須）
