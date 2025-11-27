@@ -28,10 +28,8 @@ services:
     env_file:
       - ./backend/.env
     environment:
+      # DATABASE_URLはenv_fileから読み込まれた値を使って構築
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-slack_bot}
-      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
-      TZ: Asia/Tokyo
-      NOTIFICATION_TIME: ${NOTIFICATION_TIME:-09:00}
     ports:
       - "${APP_PORT:-8000}:8000"
     volumes:
