@@ -21,6 +21,10 @@ class Settings:
     # Notification
     NOTIFICATION_TIME: str = os.getenv("NOTIFICATION_TIME", "09:00")
 
+    # Article filtering
+    ARTICLE_AGE_LIMIT_DAYS: int = int(os.getenv("ARTICLE_AGE_LIMIT_DAYS", "7"))
+    ALLOW_UNKNOWN_DATE: bool = os.getenv("ALLOW_UNKNOWN_DATE", "true").lower() == "true"
+
     # Timezone
     TIMEZONE: str = os.getenv("TZ", "Asia/Tokyo")
 
