@@ -15,55 +15,55 @@ def init_rss_sources():
     # データベース初期化
     init_db()
 
-    # RSS情報源のリスト
+    # RSS情報源のリスト（正しいRSS Feed URL）
     sources = [
         {
             "name": "メルカリ",
-            "url": "https://engineering.mercari.com/blog"
+            "url": "https://engineering.mercari.com/blog/feed.xml"
         },
         {
             "name": "サイバーエージェント",
-            "url": "https://developers.cyberagent.co.jp/blog/"
+            "url": "https://developers.cyberagent.co.jp/blog/feed/"
         },
         {
             "name": "LINE",
-            "url": "https://engineering.linecorp.com/ja/blog/"
+            "url": "https://engineering.linecorp.com/ja/blog/rss"
         },
         {
             "name": "楽天",
-            "url": "https://tech.rakuten.co.jp/"
+            "url": "https://tech.rakuten.co.jp/feed/"
         },
         {
             "name": "DeNA",
-            "url": "https://engineering.dena.com/blog/"
+            "url": "https://engineering.dena.com/blog/feed/"
         },
         {
             "name": "クックパッド",
-            "url": "https://techlife.cookpad.com"
+            "url": "https://techlife.cookpad.com/feed"
         },
         {
             "name": "ヤフー",
-            "url": "https://techblog.yahoo.co.jp/"
+            "url": "https://techblog.yahoo.co.jp/feed/"
         },
         {
             "name": "リクルート",
-            "url": "https://engineer.recruit-lifestyle.co.jp/techblog/"
+            "url": "https://engineer.recruit-lifestyle.co.jp/techblog/feed/"
         },
         {
             "name": "はてな",
-            "url": "https://developer.hatenastaff.com"
+            "url": "https://developer.hatenastaff.com/rss"
         },
         {
             "name": "ミクシィ",
-            "url": "https://mixi-developers.mixi.co.jp"
+            "url": "https://mixi-developers.mixi.co.jp/feed"
         },
         {
             "name": "GMOペパボ",
-            "url": "https://tech.pepabo.com"
+            "url": "https://tech.pepabo.com/feed.xml"
         },
         {
             "name": "ZOZO",
-            "url": "https://techblog.zozo.com"
+            "url": "https://techblog.zozo.com/rss.xml"
         },
     ]
 
