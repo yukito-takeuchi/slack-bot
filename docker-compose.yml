@@ -20,11 +20,11 @@ services:
       timeout: 5s
       retries: 5
 
-  app:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: slack-bot-app
+    container_name: slack-bot-backend
     env_file:
       - ./backend/.env
     environment:

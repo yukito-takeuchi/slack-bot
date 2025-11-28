@@ -1,0 +1,9 @@
+build:
+  docker:
+    web: Dockerfile
+release:
+  image: web
+  command:
+    - python src/scripts/init_db.py
+run:
+  web: uvicorn src.main:app --host 0.0.0.0 --port $PORT
