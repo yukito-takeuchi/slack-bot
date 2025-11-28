@@ -1,5 +1,6 @@
 """RSS feed collection service"""
 import feedparser
+import html
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 import logging
@@ -128,6 +129,30 @@ class RSSService:
 
         return is_within_limit
 
+    def contains_excluded_keyword(self, title: str) -> bool:
+        """
+        タイトルに除外キーワードが含まれているかチェック
+
+        Args:
+            title: 記事タイトル
+
+        Returns:
+            除外キーワードが含まれている場合True
+        """
+        if not settings.ENABLE_KEYWORD_FILTER:
+            return False
+
+        # HTMLエンティティをデコード（例: &#038; → &）
+        decoded_title = html.unescape(title)
+
+        # 各除外キーワードをチェック（大文字小文字を区別しない）
+        for keyword in settings.EXCLUDE_KEYWORDS:
+            if keyword.lower() in decoded_title.lower():
+                logger.info(f"Article excluded by keyword '{keyword}': {decoded_title[:80]}...")
+                return True
+
+        return False
+
     def get_new_articles(self) -> List[Dict]:
         """
         全RSS情報源から未通知の記事を取得
@@ -152,7 +177,7 @@ class RSSService:
                 articles = self.parse_articles(feed, source.id)
                 logger.info(f"Found {len(articles)} articles from {source.name}")
 
-                # 未通知 & 期間内の記事をフィルタリング
+                # 未通知 & 期間内 & キーワード除外の記事をフィルタリング
                 for article in articles:
                     # 未通知チェック
                     if self.is_article_notified(article["article_url"]):
@@ -160,6 +185,10 @@ class RSSService:
 
                     # 期間制限チェック
                     if not self.is_article_within_age_limit(article.get("published_at")):
+                        continue
+
+                    # 除外キーワードチェック
+                    if self.contains_excluded_keyword(article.get("title", "")):
                         continue
 
                     # フィルタをパスした記事を追加
