@@ -1,10 +1,11 @@
 """RSS feed collection service"""
 import feedparser
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 import logging
 from sqlalchemy.orm import Session
 from src.models import RSSSource, NotifiedArticle
+from src.config.settings import settings
 
 logger = logging.getLogger(__name__)
 
@@ -95,6 +96,38 @@ class RSSService:
         ).first()
         return existing is not None
 
+    def is_article_within_age_limit(self, published_at: Optional[datetime]) -> bool:
+        """
+        記事が期間制限内かチェック
+
+        Args:
+            published_at: 記事の公開日時
+
+        Returns:
+            期間内の場合True、公開日時が不明で許可設定の場合もTrue
+        """
+        # 公開日時が不明な場合
+        if published_at is None:
+            if settings.ALLOW_UNKNOWN_DATE:
+                logger.debug("Article has no publish date, allowing due to ALLOW_UNKNOWN_DATE=true")
+                return True
+            else:
+                logger.debug("Article has no publish date, rejecting due to ALLOW_UNKNOWN_DATE=false")
+                return False
+
+        # 期間制限をチェック
+        age_limit_days = settings.ARTICLE_AGE_LIMIT_DAYS
+        cutoff_date = datetime.now() - timedelta(days=age_limit_days)
+
+        is_within_limit = published_at >= cutoff_date
+
+        if not is_within_limit:
+            logger.debug(
+                f"Article published at {published_at} is older than {age_limit_days} days, skipping"
+            )
+
+        return is_within_limit
+
     def get_new_articles(self) -> List[Dict]:
         """
         全RSS情報源から未通知の記事を取得
@@ -119,11 +152,19 @@ class RSSService:
                 articles = self.parse_articles(feed, source.id)
                 logger.info(f"Found {len(articles)} articles from {source.name}")
 
-                # 未通知の記事をフィルタリング
+                # 未通知 & 期間内の記事をフィルタリング
                 for article in articles:
-                    if not self.is_article_notified(article["article_url"]):
-                        article["source_name"] = source.name
-                        new_articles.append(article)
+                    # 未通知チェック
+                    if self.is_article_notified(article["article_url"]):
+                        continue
+
+                    # 期間制限チェック
+                    if not self.is_article_within_age_limit(article.get("published_at")):
+                        continue
+
+                    # フィルタをパスした記事を追加
+                    article["source_name"] = source.name
+                    new_articles.append(article)
 
             except Exception as e:
                 logger.error(f"Error processing source {source.name}: {str(e)}")
