@@ -17,6 +17,7 @@ def init_rss_sources():
 
     # RSS情報源のリスト（正しいRSS Feed URL）
     sources = [
+        # 既存（12件）
         {
             "name": "メルカリ",
             "url": "https://engineering.mercari.com/blog/feed.xml"
@@ -64,6 +65,80 @@ def init_rss_sources():
         {
             "name": "ZOZO",
             "url": "https://techblog.zozo.com/rss.xml"
+        },
+
+        # 追加（18件）- 更新頻度が高い日本企業
+        {
+            "name": "Sansan",
+            "url": "https://buildersbox.corp-sansan.com/rss.xml"
+        },
+        {
+            "name": "SmartNews",
+            "url": "https://developer.smartnews.com/blog/feed/"
+        },
+        {
+            "name": "Retty",
+            "url": "https://engineer.retty.me/feed"
+        },
+        {
+            "name": "ドワンゴ",
+            "url": "https://dwango.github.io/articles/feed.xml"
+        },
+        {
+            "name": "カオナビ",
+            "url": "https://techblog.kaonavi.jp/rss.xml"
+        },
+        {
+            "name": "Chatwork",
+            "url": "https://creators-note.chatwork.com/rss"
+        },
+        {
+            "name": "eureka",
+            "url": "https://medium.com/feed/eureka-engineering"
+        },
+        {
+            "name": "freee",
+            "url": "https://developers.freee.co.jp/feed"
+        },
+        {
+            "name": "GREE",
+            "url": "https://labs.gree.jp/blog/feed/"
+        },
+        {
+            "name": "Gunosy",
+            "url": "https://tech.gunosy.io/rss"
+        },
+        {
+            "name": "Indeed",
+            "url": "https://indeed-engineering.hatenablog.jp/rss"
+        },
+        {
+            "name": "Ubie",
+            "url": "https://zenn.dev/ubie_dev/feed"
+        },
+        {
+            "name": "LayerX",
+            "url": "https://tech.layerx.co.jp/feed"
+        },
+        {
+            "name": "Money Forward",
+            "url": "https://moneyforward-dev.jp/feed/"
+        },
+        {
+            "name": "CARTA HOLDINGS",
+            "url": "https://techblog.cartaholdings.co.jp/feed"
+        },
+        {
+            "name": "ドリコム",
+            "url": "https://tech.drecom.co.jp/feed/"
+        },
+        {
+            "name": "Zlab",
+            "url": "https://www.z-lab.co.jp/blog/feed/"
+        },
+        {
+            "name": "BASE",
+            "url": "https://devblog.thebase.in/rss.xml"
         },
     ]
 
