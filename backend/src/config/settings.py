@@ -10,10 +10,20 @@ class Settings:
     """Application settings from environment variables"""
 
     # Database
-    DATABASE_URL: str = os.getenv(
-        "DATABASE_URL",
-        "postgresql://postgres:postgres@localhost:5432/slack_bot"
-    )
+    @property
+    def DATABASE_URL(self) -> str:
+        """
+        DATABASE_URLを取得
+        Herokuの古い形式（postgres://）をpostgresql://に変換
+        """
+        url = os.getenv(
+            "DATABASE_URL",
+            "postgresql://postgres:postgres@localhost:5432/slack_bot"
+        )
+        # Herokuの古い形式を新しい形式に変換
+        if url.startswith("postgres://"):
+            url = url.replace("postgres://", "postgresql://", 1)
+        return url
 
     # Slack
     SLACK_WEBHOOK_URL: Optional[str] = os.getenv("SLACK_WEBHOOK_URL")
