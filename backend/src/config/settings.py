@@ -1,6 +1,6 @@
 """Application configuration settings"""
 import os
-from typing import Optional
+from typing import Optional, List
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -24,6 +24,12 @@ class Settings:
     # Article filtering
     ARTICLE_AGE_LIMIT_DAYS: int = int(os.getenv("ARTICLE_AGE_LIMIT_DAYS", "7"))
     ALLOW_UNKNOWN_DATE: bool = os.getenv("ALLOW_UNKNOWN_DATE", "true").lower() == "true"
+
+    # Keyword filtering
+    ENABLE_KEYWORD_FILTER: bool = os.getenv("ENABLE_KEYWORD_FILTER", "true").lower() == "true"
+    EXCLUDE_KEYWORDS: List[str] = [
+        kw.strip() for kw in os.getenv("EXCLUDE_KEYWORDS", "開催,お知らせ,募集,採用,Advent Calendar").split(",")
+    ]
 
     # Timezone
     TIMEZONE: str = os.getenv("TZ", "Asia/Tokyo")
