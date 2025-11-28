@@ -4,6 +4,6 @@ build:
 release:
   image: web
   command:
-    - npm run migrate
+    - python src/scripts/init_db.py
 run:
-  web: npm start
+  web: uvicorn src.main:app --host 0.0.0.0 --port $PORT
