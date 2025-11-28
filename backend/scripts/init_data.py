@@ -6,7 +6,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from src.config.database import SessionLocal, init_db
-from src.models import RSSSource
+from src.models import RSSSource, NotifiedArticle
 
 
 def init_rss_sources():
@@ -153,6 +153,11 @@ def init_rss_sources():
             response = input("既存データを削除して再登録しますか？ (y/N): ")
 
             if response.lower() == 'y':
+                # 外部キー制約のため、先に通知履歴を削除
+                notified_count = db.query(NotifiedArticle).count()
+                db.query(NotifiedArticle).delete()
+                print(f"通知履歴 {notified_count} 件を削除しました。")
+
                 db.query(RSSSource).delete()
                 db.commit()
                 print("既存データを削除しました。")
