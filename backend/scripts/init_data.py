@@ -27,8 +27,8 @@ def init_rss_sources():
             "url": "https://developers.cyberagent.co.jp/blog/feed/"
         },
         {
-            "name": "LINE",
-            "url": "https://engineering.linecorp.com/ja/blog/rss"
+            "name": "LINEヤフー",
+            "url": "https://techblog.lycorp.co.jp/ja/feed/index.xml"
         },
         {
             "name": "楽天",
@@ -41,10 +41,6 @@ def init_rss_sources():
         {
             "name": "クックパッド",
             "url": "https://techlife.cookpad.com/feed"
-        },
-        {
-            "name": "ヤフー",
-            "url": "https://techblog.yahoo.co.jp/feed/"
         },
         {
             "name": "リクルート",

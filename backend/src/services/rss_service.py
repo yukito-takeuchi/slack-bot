@@ -153,15 +153,22 @@ class RSSService:
 
         return False
 
-    def get_new_articles(self) -> List[Dict]:
+    def get_new_articles(self) -> tuple[List[Dict], Dict]:
         """
         全RSS情報源から未通知の記事を取得
 
         Returns:
-            未通知記事のリスト
+            (未通知記事のリスト, 統計情報)
+            統計情報: {
+                "total_sources": 監視中のRSS数,
+                "successful_sources": 取得成功したRSS数,
+                "errors": エラー情報のリスト
+            }
         """
         new_articles = []
         sources = self.get_active_sources()
+        errors = []
+        successful_count = 0
 
         logger.info(f"Fetching articles from {len(sources)} RSS sources")
 
@@ -172,8 +179,21 @@ class RSSService:
 
                 if not feed:
                     logger.warning(f"Failed to fetch feed from {source.name}")
+                    errors.append({
+                        "source_name": source.name,
+                        "error": "フィード取得失敗"
+                    })
                     continue
 
+                if not feed.entries:
+                    logger.warning(f"No entries found in feed from {source.name}")
+                    errors.append({
+                        "source_name": source.name,
+                        "error": "記事なし"
+                    })
+                    continue
+
+                successful_count += 1
                 articles = self.parse_articles(feed, source.id)
                 logger.info(f"Found {len(articles)} articles from {source.name}")
 
@@ -197,10 +217,21 @@ class RSSService:
 
             except Exception as e:
                 logger.error(f"Error processing source {source.name}: {str(e)}")
+                errors.append({
+                    "source_name": source.name,
+                    "error": str(e)[:50]  # エラーメッセージを50文字に制限
+                })
                 continue
 
         logger.info(f"Total new articles found: {len(new_articles)}")
-        return new_articles
+
+        stats = {
+            "total_sources": len(sources),
+            "successful_sources": successful_count,
+            "errors": errors
+        }
+
+        return new_articles, stats
 
     def mark_as_notified(self, articles: List[Dict]) -> None:
         """
