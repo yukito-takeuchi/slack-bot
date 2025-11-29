@@ -84,10 +84,10 @@ class SlackService:
                     date_str = published_at.strftime('%Y-%m-%d')
 
             message += f"[{source_name}] {title}\n"
-            message += f"{url}\n"
+            message += f"{url}\n"  # URLは単独行（unfurl発火のため）
             if date_str:
                 message += f"公開日: {date_str}\n"
-            message += "\n"
+            message += "\n"  # 記事間の区切り
 
         return message
 
@@ -141,7 +141,9 @@ class SlackService:
                 "channel": self.channel_id,
                 "text": text,
                 "username": "Tech Blog Bot",
-                "icon_emoji": ":robot_face:"
+                "icon_emoji": ":robot_face:",
+                "unfurl_links": True,   # URLプレビューを有効化
+                "unfurl_media": True    # 画像/動画プレビューを有効化
             }
 
             if thread_ts:
