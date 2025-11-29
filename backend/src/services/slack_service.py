@@ -1,7 +1,7 @@
 """Slack notification service"""
 import requests
 import logging
-from typing import List, Dict
+from typing import List, Dict, Optional
 from datetime import datetime
 from src.config.settings import settings
 
@@ -14,52 +14,89 @@ class SlackService:
     def __init__(self):
         self.webhook_url = settings.SLACK_WEBHOOK_URL
 
-    def format_message(self, articles: List[Dict]) -> str:
+    def format_message(
+        self,
+        articles: List[Dict],
+        total_sources: int = 0,
+        successful_sources: int = 0,
+        errors: Optional[List[Dict]] = None
+    ) -> str:
         """
         記事リストをSlackメッセージ形式に整形
 
         Args:
             articles: 記事情報のリスト
+            total_sources: 監視中の総RSS数
+            successful_sources: 取得成功したRSS数
+            errors: エラー情報のリスト
 
         Returns:
             整形されたメッセージ
         """
-        if not articles:
-            return "本日は新着記事がありませんでした。"
-
         # ヘッダー
-        today = datetime.now().strftime("%Y年%m月%d日")
-        message = f":newspaper: *技術ブログ新着記事* ({today})\n\n"
-        message += f"本日は *{len(articles)}件* の新着記事があります！\n\n"
+        today = datetime.now().strftime("%Y-%m-%d %H:%M")
+        message = f"【本日の技術ブログ更新】{today}\n\n"
 
-        # 記事リスト
-        for i, article in enumerate(articles, 1):
-            title = article.get("title", "No Title")
-            url = article.get("article_url", "")
-            source_name = article.get("source_name", "Unknown")
-            published_at = article.get("published_at")
+        # 記事情報
+        if not articles:
+            message += "本日の新着記事はありません\n\n"
+        else:
+            message += f"✅ 新着記事: {len(articles)}件\n\n"
 
-            # 公開日時の整形
-            date_str = ""
-            if published_at:
-                if isinstance(published_at, str):
-                    date_str = f" | {published_at}"
-                elif isinstance(published_at, datetime):
-                    date_str = f" | {published_at.strftime('%Y-%m-%d')}"
+            # 記事リスト
+            for article in articles:
+                title = article.get("title", "No Title")
+                url = article.get("article_url", "")
+                source_name = article.get("source_name", "Unknown")
+                published_at = article.get("published_at")
 
-            message += f"{i}. *<{url}|{title}>*\n"
-            message += f"   :office: {source_name}{date_str}\n\n"
+                # 公開日時の整形
+                date_str = ""
+                if published_at:
+                    if isinstance(published_at, str):
+                        date_str = published_at
+                    elif isinstance(published_at, datetime):
+                        date_str = published_at.strftime('%Y-%m-%d')
 
-        message += "\n_良い一日を！_ :coffee:"
+                message += f"[{source_name}] {title}\n"
+                message += f"{url}\n"
+                if date_str:
+                    message += f"公開日: {date_str}\n"
+                message += "\n"
+
+        # エラー情報
+        if errors and len(errors) > 0:
+            message += f"⚠️ 取得エラー: {len(errors)}サイト\n"
+            for error in errors[:5]:  # 最大5件まで表示
+                source_name = error.get("source_name", "Unknown")
+                error_msg = error.get("error", "Unknown error")
+                message += f"- {source_name} ({error_msg})\n"
+
+            if len(errors) > 5:
+                message += f"...他 {len(errors) - 5}件\n"
+            message += "\n"
+
+        # 統計情報
+        if total_sources > 0:
+            message += f"📊 監視中: {total_sources}サイト | 今日の取得成功: {successful_sources}サイト\n"
 
         return message
 
-    def send_notification(self, articles: List[Dict]) -> bool:
+    def send_notification(
+        self,
+        articles: List[Dict],
+        total_sources: int = 0,
+        successful_sources: int = 0,
+        errors: Optional[List[Dict]] = None
+    ) -> bool:
         """
         Slackに通知を送信
 
         Args:
             articles: 記事情報のリスト
+            total_sources: 監視中の総RSS数
+            successful_sources: 取得成功したRSS数
+            errors: エラー情報のリスト
 
         Returns:
             成功した場合True、失敗した場合False
@@ -69,7 +106,12 @@ class SlackService:
             return False
 
         try:
-            message = self.format_message(articles)
+            message = self.format_message(
+                articles=articles,
+                total_sources=total_sources,
+                successful_sources=successful_sources,
+                errors=errors
+            )
 
             payload = {
                 "text": message,
