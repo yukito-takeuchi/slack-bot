@@ -54,40 +54,34 @@ class SlackService:
 
         return message
 
-    def format_thread_articles(self, articles: List[Dict]) -> str:
+    def format_single_article(self, article: Dict) -> str:
         """
-        スレッド内の記事一覧メッセージを整形
+        1件の記事を整形（unfurl発火のため、URLを独立させる）
 
         Args:
-            articles: 記事情報のリスト
+            article: 記事情報
 
         Returns:
             整形されたメッセージ
         """
-        if not articles:
-            return ""
+        title = article.get("title", "No Title")
+        url = article.get("article_url", "")
+        source_name = article.get("source_name", "Unknown")
+        published_at = article.get("published_at")
 
-        message = "📄 新着記事一覧\n\n"
+        # 公開日時の整形
+        date_str = ""
+        if published_at:
+            if isinstance(published_at, str):
+                date_str = published_at
+            elif isinstance(published_at, datetime):
+                date_str = published_at.strftime('%Y-%m-%d')
 
-        for article in articles:
-            title = article.get("title", "No Title")
-            url = article.get("article_url", "")
-            source_name = article.get("source_name", "Unknown")
-            published_at = article.get("published_at")
-
-            # 公開日時の整形
-            date_str = ""
-            if published_at:
-                if isinstance(published_at, str):
-                    date_str = published_at
-                elif isinstance(published_at, datetime):
-                    date_str = published_at.strftime('%Y-%m-%d')
-
-            message += f"[{source_name}] {title}\n"
-            message += f"{url}\n"  # URLは単独行（unfurl発火のため）
-            if date_str:
-                message += f"公開日: {date_str}\n"
-            message += "\n"  # 記事間の区切り
+        # タイトルと公開日を先に記載、URLは最後に単独で
+        message = f"[{source_name}] {title}\n"
+        if date_str:
+            message += f"公開日: {date_str}\n"
+        message += f"{url}"  # URLを最後に単独で配置（unfurl発火）
 
         return message
 
@@ -211,13 +205,24 @@ class SlackService:
 
             # 2. 記事がある場合、スレッドに記事一覧を投稿
             if articles:
-                article_message = self.format_thread_articles(articles)
-                if article_message:
-                    article_ts = self.post_message(article_message, thread_ts=thread_ts)
-                    if article_ts:
-                        logger.info(f"Successfully posted {len(articles)} articles to thread")
-                    else:
-                        logger.warning("Failed to post articles to thread")
+                # ヘッダーを投稿
+                header = "📄 新着記事一覧"
+                header_ts = self.post_message(header, thread_ts=thread_ts)
+                if not header_ts:
+                    logger.warning("Failed to post article header to thread")
+
+                # 各記事を個別に投稿（unfurl発火のため）
+                posted_count = 0
+                for article in articles:
+                    article_message = self.format_single_article(article)
+                    if article_message:
+                        article_ts = self.post_message(article_message, thread_ts=thread_ts)
+                        if article_ts:
+                            posted_count += 1
+                        else:
+                            logger.warning(f"Failed to post article: {article.get('title', 'Unknown')}")
+
+                logger.info(f"Successfully posted {posted_count}/{len(articles)} articles to thread")
 
             # 3. エラーがある場合、スレッドにエラー情報を投稿
             if errors:
