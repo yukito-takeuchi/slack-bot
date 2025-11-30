@@ -56,12 +56,13 @@ class SlackService:
 
         return message
 
-    def format_single_article(self, article: Dict) -> str:
+    def format_single_article(self, article: Dict, article_id: int = 0) -> str:
         """
         1件の記事を整形（unfurl発火のため、URLを独立させる）
 
         Args:
             article: 記事情報
+            article_id: 記事の通し番号
 
         Returns:
             整形されたメッセージ
@@ -84,8 +85,8 @@ class SlackService:
         unique_hash = hashlib.md5(f"{url}{time.time()}".encode()).hexdigest()[:8]
         url_with_hash = f"{url}#{unique_hash}"
 
-        # タイトルと公開日を先に記載、URLは最後に単独で
-        message = f"[{source_name}] {title}\n"
+        # ID、タイトル、公開日を先に記載、URLは最後に単独で
+        message = f"#{article_id} [{source_name}] {title}\n"
         if date_str:
             message += f"公開日: {date_str}\n"
         message += f"{url_with_hash}"  # ハッシュ付きURLで1時間制限を回避
@@ -220,8 +221,8 @@ class SlackService:
 
                 # 各記事を個別に投稿（unfurl発火のため）
                 posted_count = 0
-                for article in articles:
-                    article_message = self.format_single_article(article)
+                for index, article in enumerate(articles, start=1):
+                    article_message = self.format_single_article(article, article_id=index)
                     if article_message:
                         article_ts = self.post_message(article_message, thread_ts=thread_ts)
                         if article_ts:
