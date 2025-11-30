@@ -1,6 +1,8 @@
 """Slack notification service"""
 import requests
 import logging
+import hashlib
+import time
 from typing import List, Dict, Optional
 from datetime import datetime
 from src.config.settings import settings
@@ -77,11 +79,16 @@ class SlackService:
             elif isinstance(published_at, datetime):
                 date_str = published_at.strftime('%Y-%m-%d')
 
+        # URLにユニークなハッシュを追加（Slackの1時間unfurl制限を回避）
+        # ハッシュフラグメント（#以降）はブラウザでは無視されるため、同じページに飛ぶ
+        unique_hash = hashlib.md5(f"{url}{time.time()}".encode()).hexdigest()[:8]
+        url_with_hash = f"{url}#{unique_hash}"
+
         # タイトルと公開日を先に記載、URLは最後に単独で
         message = f"[{source_name}] {title}\n"
         if date_str:
             message += f"公開日: {date_str}\n"
-        message += f"{url}"  # URLを最後に単独で配置（unfurl発火）
+        message += f"{url_with_hash}"  # ハッシュ付きURLで1時間制限を回避
 
         return message
 
