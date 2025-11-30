@@ -60,3 +60,8 @@ htmlcov/
 
 # Alembic
 alembic/versions/*.pyc
+
+
+
+
+SLACK_APP_SETUP.md

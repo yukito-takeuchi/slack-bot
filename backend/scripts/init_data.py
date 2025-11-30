@@ -42,6 +42,10 @@ def init_rss_sources():
             "name": "クックパッド",
             "url": "https://techlife.cookpad.com/feed"
         },
+        # {
+        #     "name": "ヤフー",
+        #     "url": "https://techblog.yahoo.co.jp/feed/"
+        # },
         {
             "name": "リクルート",
             "url": "https://engineer.recruit-lifestyle.co.jp/techblog/feed/"

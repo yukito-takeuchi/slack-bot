@@ -29,6 +29,8 @@ class Settings:
 
     # Slack
     SLACK_WEBHOOK_URL: Optional[str] = os.getenv("SLACK_WEBHOOK_URL")
+    SLACK_BOT_TOKEN: Optional[str] = os.getenv("SLACK_BOT_TOKEN")
+    SLACK_CHANNEL_ID: Optional[str] = os.getenv("SLACK_CHANNEL_ID")
 
     # Notification
     NOTIFICATION_TIME: str = os.getenv("NOTIFICATION_TIME", "09:00")
