@@ -1,12 +1,12 @@
 # Tech Blog Notification Bot
 
-> 日本企業80社の技術ブログRSSを監視し、新着記事をSlackに自動通知するBot
+> 日本企業 80 社の技術ブログ RSS を監視し、新着記事を Slack に自動通知する Bot
 
 ---
 
 ## 📖 概要
 
-日本の有力IT企業80社の技術ブログを毎日監視し、新着記事をSlackに自動通知するシステムです。スレッド機能とURL unfurl機能を活用し、見やすく情報整理された通知を実現しています。
+日本の有力 IT 企業 80 社の技術ブログを毎日監視し、新着記事を Slack に自動通知するシステムです。スレッド機能と URL unfurl 機能を活用し、見やすく情報整理された通知を実現しています。
 
 ---
 
@@ -68,43 +68,43 @@ graph TB
 
 ### Backend
 
-| 技術 | 用途 |
-|------|------|
-| Python 3.11 | プログラミング言語 |
-| FastAPI | REST APIフレームワーク |
-| SQLAlchemy | ORM（データベース操作） |
-| feedparser | RSSフィード解析 |
+| 技術        | 用途                       |
+| ----------- | -------------------------- |
+| Python 3.11 | プログラミング言語         |
+| FastAPI     | REST API フレームワーク    |
+| SQLAlchemy  | ORM（データベース操作）    |
+| feedparser  | RSS フィード解析           |
 | APScheduler | スケジューラー（定期実行） |
-| requests | HTTP通信 |
+| requests    | HTTP 通信                  |
 
 ### Database
 
-| 技術 | 用途 |
-|------|------|
+| 技術       | 用途               |
+| ---------- | ------------------ |
 | PostgreSQL | メインデータベース |
 
 ### External Services
 
-| 技術 | 用途 |
-|------|------|
-| Slack Bot API | チャンネル通知 |
-| chat.postMessage | メッセージ投稿 |
-| Thread機能 | スレッド返信 |
-| Unfurl機能 | URLプレビュー表示 |
+| 技術             | 用途               |
+| ---------------- | ------------------ |
+| Slack Bot API    | チャンネル通知     |
+| chat.postMessage | メッセージ投稿     |
+| Thread 機能      | スレッド返信       |
+| Unfurl 機能      | URL プレビュー表示 |
 
 ### Infrastructure
 
-| 技術 | 用途 |
-|------|------|
-| Docker | コンテナ化 |
-| Docker Compose | ローカル開発環境 |
-| Heroku | 本番環境ホスティング |
-| Heroku Container Registry | Dockerデプロイ |
-| Heroku Scheduler | 定期実行 |
+| 技術                      | 用途                 |
+| ------------------------- | -------------------- |
+| Docker                    | コンテナ化           |
+| Docker Compose            | ローカル開発環境     |
+| Heroku                    | 本番環境ホスティング |
+| Heroku Container Registry | Docker デプロイ      |
+| Heroku Scheduler          | 定期実行             |
 
 ---
 
-## 🗄️ データベース設計（ER図）
+## 🗄️ データベース設計（ER 図）
 
 ```mermaid
 erDiagram
@@ -133,50 +133,53 @@ erDiagram
 
 ## ✨ 主な機能
 
-### 📰 RSS巡回機能
+### 📰 RSS 巡回機能
 
-- ✅ **80社の技術ブログ監視**
+- ✅ **80 社の技術ブログ監視**
   - メルカリ、サイバーエージェント、LINE、楽天、DeNA など
   - スタートアップから大手企業まで網羅
-- 🕐 **定期実行**: 毎日09:00（JST）に自動実行
-- 📅 **期間フィルタ**: 過去30日以内の記事のみ取得
+- 🕐 **定期実行**: 毎日 09:00（JST）に自動実行
+- 📅 **期間フィルタ**: 過去 30 日以内の記事のみ取得
 - 🚫 **キーワード除外**: イベント・採用情報を自動除外
   - 除外キーワード: 開催、お知らせ、募集、採用、Advent Calendar、出展、参加、イベント
-- 🔄 **重複防止**: 通知済み記事をDBで管理
+- 🔄 **重複防止**: 通知済み記事を DB で管理
 
-### 💬 Slack通知機能
+### 💬 Slack 通知機能
 
 - 📱 **スレッド形式で通知**
   - メイン投稿: 記事数と統計情報のサマリー
   - スレッド内: 各記事の詳細（個別メッセージ）
-- 🖼️ **URL unfurl機能**
-  - OGP画像・タイトル・説明文を自動表示
-  - 1時間制限を回避（ハッシュフラグメント使用）
-- 🔢 **記事ID表示**: #1, #2, #3... で参照しやすく
+- 🖼️ **URL unfurl 機能**
+  - OGP 画像・タイトル・説明文を自動表示
+  - 1 時間制限を回避（ハッシュフラグメント使用）
+- 🔢 **記事 ID 表示**: #1, #2, #3... で参照しやすく
 - 📊 **統計情報表示**
   - 監視中サイト数
   - 取得成功サイト数
   - エラー情報
 - ⚠️ **エラーハンドリング**
-  - RSS取得失敗時のエラー詳細表示
-  - 記事0件でも通知を送信
+  - RSS 取得失敗時のエラー詳細表示
+  - 記事 0 件でも通知を送信
 
 ---
 
 ## 💡 工夫した点・技術的チャレンジ
 
-### 1. Slackスレッド機能の活用
+### 1. Slack スレッド機能の活用
 
 **課題:**
-- 1日10-20件の記事通知でチャンネルが埋まる
+
+- 1 日 10-20 件の記事通知でチャンネルが埋まる
 - 過去の通知を遡るのが困難
 
 **解決策:**
-- メイン投稿: 簡潔なサマリー（3-4行）
+
+- メイン投稿: 簡潔なサマリー（3-4 行）
 - スレッド内: 詳細な記事一覧
 - チャンネルがスッキリ、詳細はスレッドで確認
 
 **実装:**
+
 ```python
 # メイン投稿
 thread_ts = self.post_message(main_message)
@@ -188,19 +191,22 @@ for article in articles:
 
 ---
 
-### 2. URL unfurl 1時間制限の回避
+### 2. URL unfurl 1 時間制限の回避
 
 **課題:**
-- Slackは同じURLを1時間以内に再投稿すると、unfurl（プレビュー表示）をスキップ
+
+- Slack は同じ URL を 1 時間以内に再投稿すると、unfurl（プレビュー表示）をスキップ
 - テスト時や同じ記事の再投稿で問題
 
 **解決策:**
-- URLにユニークなハッシュフラグメントを追加
+
+- URL にユニークなハッシュフラグメントを追加
 - `https://example.com/article#a1b2c3d4`
 - ブラウザは `#` 以降を無視するため、同じページに飛ぶ
-- Slackは「異なるURL」と認識してunfurlを実行
+- Slack は「異なる URL」と認識して unfurl を実行
 
 **実装:**
+
 ```python
 import hashlib
 import time
@@ -214,14 +220,17 @@ url_with_hash = f"{url}#{unique_hash}"
 ### 3. 各記事を個別メッセージで投稿
 
 **課題:**
-- 1つのメッセージに複数URLがあると、unfurlが発火しない
+
+- 1 つのメッセージに複数 URL があると、unfurl が発火しない
 
 **解決策:**
+
 - ヘッダーメッセージ: `📄 新着記事一覧`
 - 各記事を個別メッセージとして投稿
-- 全てのURLでunfurlが確実に発火
+- 全ての URL で unfurl が確実に発火
 
 **Before:**
+
 ```python
 # 全記事を1メッセージにまとめる（unfurl発火しない）
 message = "記事1\nURL1\n\n記事2\nURL2..."
@@ -229,6 +238,7 @@ post_message(message)
 ```
 
 **After:**
+
 ```python
 # 各記事を個別に投稿（unfurl発火する）
 for article in articles:
@@ -240,14 +250,17 @@ for article in articles:
 ### 4. 重複通知防止
 
 **課題:**
+
 - 同じ記事を複数回通知してしまう
 
 **解決策:**
+
 - `notified_articles` テーブルで通知履歴を管理
-- 記事URL（UNIQUE制約）で重複チェック
+- 記事 URL（UNIQUE 制約）で重複チェック
 - 未通知の記事のみを通知対象とする
 
 **実装:**
+
 ```python
 def is_article_notified(self, article_url: str) -> bool:
     existing = self.db.query(NotifiedArticle).filter(
@@ -258,17 +271,20 @@ def is_article_notified(self, article_url: str) -> bool:
 
 ---
 
-### 5. HTMLエンティティデコード対応
+### 5. HTML エンティティデコード対応
 
 **課題:**
-- RSS内のタイトルに `&#038;` などのHTMLエンティティが含まれる
+
+- RSS 内のタイトルに `&#038;` などの HTML エンティティが含まれる
 - キーワードフィルタが正しく動作しない
 
 **解決策:**
+
 - `html.unescape()` でデコード
 - `&#038;` → `&` に変換してからキーワードマッチング
 
 **実装:**
+
 ```python
 import html
 
@@ -279,23 +295,27 @@ if keyword.lower() in decoded_title.lower():
 
 ---
 
-### 6. 記事0件でも必ず通知
+### 6. 記事 0 件でも必ず通知
 
 **課題:**
-- 記事0件の日は通知なし → 機能が動いているか不明
+
+- 記事 0 件の日は通知なし → 機能が動いているか不明
 
 **解決策:**
-- 記事0件でも統計情報を通知
+
+- 記事 0 件でも統計情報を通知
 - 「本日の新着記事はありません」メッセージ
 - 監視中サイト数、取得成功数を表示
 
 **Before:**
+
 ```python
 if not articles:
     return  # 何も通知しない
 ```
 
 **After:**
+
 ```python
 # 記事0件でも必ず通知
 send_notification(
@@ -310,15 +330,18 @@ send_notification(
 ### 7. エラー情報の可視化
 
 **課題:**
-- RSS取得失敗がログにしか残らない
+
+- RSS 取得失敗がログにしか残らない
 - ユーザーに問題が見えない
 
 **解決策:**
+
 - エラー情報をスレッドに投稿
 - サイト名とエラー内容を表示
-- 最大10件までリスト表示
+- 最大 10 件までリスト表示
 
 **スレッド内:**
+
 ```
 ⚠️ 取得エラー詳細
 
@@ -333,6 +356,7 @@ send_notification(
 
 ```
 slack-bot/
+├── frontend/
 ├── backend/
 │   ├── src/
 │   │   ├── config/
@@ -390,15 +414,17 @@ EXCLUDE_KEYWORDS=開催,お知らせ,募集,採用,Advent Calendar,出展,参加
 TZ=Asia/Tokyo
 ```
 
-### 2. Slack App作成
+### 2. Slack App 作成
 
 詳細は `SLACK_APP_SETUP.md` を参照
 
 **必要な権限:**
+
 - `chat:write`
 - `chat:write.public`
 
 **取得する情報:**
+
 - Bot Token: `xoxb-...`
 - Channel ID: `C...`
 
@@ -416,7 +442,7 @@ python scripts/init_data.py
 python -c "from src.config.database import SessionLocal; from src.services.notification_service import NotificationService; db = SessionLocal(); service = NotificationService(db); service.run(); db.close()"
 ```
 
-### 4. Herokuデプロイ
+### 4. Heroku デプロイ
 
 ```bash
 # Heroku CLI ログイン
@@ -450,32 +476,39 @@ heroku addons:open scheduler -a your-slack-bot-name
 
 ---
 
-## 📊 監視対象企業（80社）
+## 📊 監視対象企業（80 社）
 
-### スタートアップ・メガベンチャー系（45社）
-メルカリ、サイバーエージェント、LINE、楽天、DeNA、クックパッド、ヤフー、リクルート、はてな、ミクシィ、GMOペパボ、ZOZO、Sansan、SmartNews、Retty、ドワンゴ、カオナビ、Chatwork、eureka、freee、GREE、Gunosy、Indeed、Ubie、LayerX、Money Forward、CARTA HOLDINGS、ドリコム、Zlab、BASE、SmartHR、Timee、READYFOR、10X、ビズリーチ、Visional、プレイド、ココナラ、MICIN、スタディサプリ、Ateam、アンドパッド、ラクスル、カケハシ、Wantedly
+### スタートアップ・メガベンチャー系（45 社）
 
-### ゲーム会社系（8社）
+メルカリ、サイバーエージェント、LINE、楽天、DeNA、クックパッド、ヤフー、リクルート、はてな、ミクシィ、GMO ペパボ、ZOZO、Sansan、SmartNews、Retty、ドワンゴ、カオナビ、Chatwork、eureka、freee、GREE、Gunosy、Indeed、Ubie、LayerX、Money Forward、CARTA HOLDINGS、ドリコム、Zlab、BASE、SmartHR、Timee、READYFOR、10X、ビズリーチ、Visional、プレイド、ココナラ、MICIN、スタディサプリ、Ateam、アンドパッド、ラクスル、カケハシ、Wantedly
+
+### ゲーム会社系（8 社）
+
 Cygames、コロプラ、アカツキ、QualiArts、gumi、KLab、セガ、Craft Egg
 
-### 決済・金融系（7社）
-PayPay、GMOインターネット、GMOメディア、Kyash、bitFlyer、Coincheck、Moneytree
+### 決済・金融系（7 社）
 
-### メディア・広告系（5社）
+PayPay、GMO インターネット、GMO メディア、Kyash、bitFlyer、Coincheck、Moneytree
+
+### メディア・広告系（5 社）
+
 エムスリー、オプト、サイボウズ、pixiv、note
 
-### 大手IT・SIer系（5社）
-NTTコミュニケーションズ、NTTデータ、リクルートテクノロジーズ、富士通、日立製作所
+### 大手 IT・SIer 系（5 社）
 
-### EC・マーケットプレイス系（5社）
-ヤプリ、オイシックス・ラ・大地、PKSHA Technology、ラクマ、Zホールディングス
+NTT コミュニケーションズ、NTT データ、リクルートテクノロジーズ、富士通、日立製作所
 
-### その他有力企業（5社）
+### EC・マーケットプレイス系（5 社）
+
+ヤプリ、オイシックス・ラ・大地、PKSHA Technology、ラクマ、Z ホールディングス
+
+### その他有力企業（5 社）
+
 弁護士ドットコム、Uzabase、トレタ、フィードフォース、ペライチ
 
 ---
 
-## 📸 Slack通知例
+## 📸 Slack 通知例
 
 ### メイン投稿（チャンネル）
 
@@ -522,8 +555,8 @@ https://engineering.mercari.com/blog/entry/2025-01-14#e5f6g7h8
 
 ## 🎯 今後の改善予定
 
-- [ ] Webダッシュボード（記事一覧・検索機能）
-- [ ] 企業ごとの通知ON/OFF設定
+- [ ] Web ダッシュボード（記事一覧・検索機能）
+- [ ] 企業ごとの通知 ON/OFF 設定
 - [ ] キーワードアラート機能
 - [ ] 週次サマリーレポート
 - [ ] 記事の人気度スコアリング
