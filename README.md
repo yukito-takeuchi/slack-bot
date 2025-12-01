@@ -81,22 +81,9 @@ graph TB
 
 ### 現在の構成
 
-- **Frontend**: Slack（通知受信UI、スレッド機能、unfurl機能）
-- **Backend**: FastAPI（RSS巡回、通知管理）
-- **Database**: PostgreSQL（RSS情報源、通知履歴）
-
-### 将来の拡張予定（点線部分）
-
-- **Web Frontend（Next.js）**:
-  - ユーザーごとの通知設定画面
-  - カテゴリ選択（スタートアップ、ゲーム会社など）
-  - 通知時間帯設定
-  - Firebase認証によるユーザー管理
-- **Database拡張**:
-  - `users`テーブル（ユーザー情報）
-  - `user_preferences`テーブル（通知設定、カテゴリ選択）
-- **Infrastructure拡張**:
-  - Vercel（Webフロントエンドホスティング）
+- **Frontend**: Slack（通知受信 UI、スレッド機能、unfurl 機能）
+- **Backend**: FastAPI（RSS 巡回、通知管理）
+- **Database**: PostgreSQL（RSS 情報源、通知履歴）
 
 ---
 
