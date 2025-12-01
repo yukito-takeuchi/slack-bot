@@ -10,6 +10,18 @@
 
 ---
 
+## 📺 デモ
+
+<div align="center">
+
+![YouTube Clone Demo](https://github.com/yukito-takeuchi/amazon-clone/blob/feature/frontend-setup2/update_demo.gif)
+
+_実際のアプリケーションの動作デモ_
+
+</div>
+
+---
+
 ## 🏗️ システム構成
 
 ```mermaid
