@@ -71,6 +71,12 @@ graph TB
     style J fill:#430098
 ```
 
+### 現在の構成
+
+- **Frontend**: Slack（通知受信 UI、スレッド機能、unfurl 機能）
+- **Backend**: FastAPI（RSS 巡回、通知管理）
+- **Database**: PostgreSQL（RSS 情報源、通知履歴）
+
 ---
 
 ## 🛠️ 使用技術
