@@ -14,9 +14,9 @@
 
 ```mermaid
 graph TB
-    subgraph "Frontend (Current: Slack)"
-        UI[Slack<br/>通知受信UI<br/>スレッド & Unfurl]
-        FutureFE[Future: Web UI<br/>Next.js<br/>カテゴリ選択<br/>通知設定<br/>Firebase認証]
+    subgraph "Frontend"
+        UI1[Slack<br/>通知受信]
+        UI2[Next.js<br/>設定画面]
     end
 
     subgraph "Scheduler"
@@ -31,19 +31,17 @@ graph TB
     end
 
     subgraph "Database"
-        F[PostgreSQL<br/>rss_sources<br/>notified_articles<br/>Future: users, preferences]
+        F[PostgreSQL<br/>rss_sources<br/>notified_articles]
     end
 
     subgraph "External Services"
         G[Slack API<br/>chat.postMessage<br/>Thread & Unfurl]
         H[RSS Feeds<br/>80社の技術ブログ]
-        Auth[Future: Firebase Auth<br/>ユーザー認証]
     end
 
     subgraph "Infrastructure"
         I[Docker Compose<br/>ローカル開発環境]
         J[Heroku<br/>本番環境]
-        K[Future: Vercel<br/>Frontend Deploy]
     end
 
     A -->|トリガー| E
@@ -52,19 +50,15 @@ graph TB
     C -->|保存/確認| F
     E -->|通知| D
     D -->|投稿| G
-    G -->|表示| UI
+    G -->|表示| UI1
+    UI2 -->|API Call| B
     B -->|実行| A
     I -->|Container| B
     I -->|Container| F
     B -->|Deploy| J
 
-    FutureFE -.->|将来: API Call| B
-    FutureFE -.->|将来: 認証| Auth
-    FutureFE -.->|将来: Deploy| K
-    B -.->|将来: ユーザー設定取得| F
-
-    style UI fill:#e01e5a
-    style FutureFE fill:#61dafb,stroke-dasharray: 5 5
+    style UI1 fill:#e01e5a
+    style UI2 fill:#61dafb
     style A fill:#ff6b6b
     style B fill:#009688
     style C fill:#4caf50
@@ -73,17 +67,9 @@ graph TB
     style F fill:#336791
     style G fill:#e01e5a
     style H fill:#ff9800
-    style Auth fill:#ffca28,stroke-dasharray: 5 5
     style I fill:#2496ed
     style J fill:#430098
-    style K fill:#000000,stroke-dasharray: 5 5
 ```
-
-### 現在の構成
-
-- **Frontend**: Slack（通知受信 UI、スレッド機能、unfurl 機能）
-- **Backend**: FastAPI（RSS 巡回、通知管理）
-- **Database**: PostgreSQL（RSS 情報源、通知履歴）
 
 ---
 
