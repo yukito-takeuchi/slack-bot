@@ -14,7 +14,7 @@
 
 <div align="center">
 
-![YouTube Clone Demo](https://github.com/yukito-takeuchi/slack-bot/blob/feature/backend-setup1/demo1_video.gif)
+![YouTube Clone Demo](https://github.com/yukito-takeuchi/slack-bot/blob/feature/backend-setup1/demo_video2.gif)
 
 _実際のアプリケーションの動作デモ_
 
